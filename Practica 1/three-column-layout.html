@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Three Column Layout</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+        header, footer {
+            background: #333;
+            color: white;
+            text-align: center;
+            padding: 10px;
+        }
+        .container {
+            display: flex;
+            flex: 1;
+        }
+        .sidebar-left, .sidebar-right {
+            width: 200px;
+            background: #f4f4f4;
+            padding: 20px;
+        }
+        .content {
+            flex: 1;
+            padding: 20px;
+            background: #ddd;
+        }
+    </style>
+</head>
+<body>
+
+    <header>Encabezado</header>
+    <div class="container">
+        <aside class="sidebar-left">Barra lateral izquierda</aside>
+        <main class="content">Contenido principal</main>
+        <aside class="sidebar-right">Barra lateral derecha</aside>
+    </div>
+    <footer>Pie de página</footer>
+
+</body>
+</html>

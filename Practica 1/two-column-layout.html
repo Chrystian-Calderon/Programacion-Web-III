@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Two Column Layout</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            font-family: Arial, sans-serif;
+            margin: 0;
+        }
+        header, footer {
+            background: #333;
+            color: white;
+            text-align: center;
+            padding: 10px;
+        }
+        .container {
+            display: flex;
+            flex: 1;
+        }
+        .sidebar {
+            width: 250px;
+            background: #f4f4f4;
+            padding: 20px;
+        }
+        .content {
+            flex: 1;
+            padding: 20px;
+            background: #ddd;
+        }
+    </style>
+</head>
+<body>
+
+    <header>Encabezado</header>
+    <div class="container">
+        <aside class="sidebar">Barra lateral</aside>
+        <main class="content">Contenido principal</main>
+    </div>
+    <footer>Pie de página</footer>
+
+</body>
+</html>
