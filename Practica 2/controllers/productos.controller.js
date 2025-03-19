@@ -2,25 +2,29 @@ const getDBConnection = require('../db/index');
 
 const getProductos = async (req, res) => {
     const mode = req.headers['x-db-mode'] || 'promise';
+    console.time('ALL Conexion ' + mode);
     const db = getDBConnection(mode);
 
     try {
         if (mode === 'basic' || mode === 'pool') {
-            db.query('SELECT p.id_producto, p.nombre, p.precio, p.stock, c.nombre AS categoria FROM productos p LEFT JOIN categorias c ON p.id_categoria = c.id_categoria', (err, results) => {
+            db.query('SELECT p.id_producto, p.nombre, p.precio, p.stock, c.nombre AS categoria, c.id_categoria FROM productos p LEFT JOIN categorias c ON p.id_categoria = c.id_categoria', (err, results) => {
                 if (err) return res.status(500).json({ error: err.message });
                 res.json({ modo: mode, results });
             });
         } else {
-            const [rows] = await db.query('SELECT p.id_producto, p.nombre, p.precio, p.stock, c.nombre AS categoria FROM productos p LEFT JOIN categorias c ON p.id_categoria = c.id_categoria');
+            const [rows] = await db.query('SELECT p.id_producto, p.nombre, p.precio, p.stock, c.nombre AS categoria, c.id_categoria FROM productos p LEFT JOIN categorias c ON p.id_categoria = c.id_categoria');
             res.json({ modo: mode, results: rows });
         }
     } catch (e) {
         res.status(500).json({ error: e.message });
+    } finally {
+        console.timeEnd('ALL Conexion ' + mode);
     }
 };
 
 const getProductoById = async (req, res) => {
     const mode = req.headers['x-db-mode'] || 'promise';
+    console.time('GET Conexion ' + mode);
     const db = getDBConnection(mode);
     const { id } = req.params;
 
@@ -36,11 +40,14 @@ const getProductoById = async (req, res) => {
         }
     } catch (e) {
         res.status(500).json({ error: e.message });
+    } finally {
+        console.timeEnd('GET Conexion ' + mode);
     }
 }
 
 const createProducto = async (req, res) => {
     const mode = req.headers['x-db-mode'] || 'promise';
+    console.time('CREATE Conexion ' + mode);
     const db = getDBConnection(mode);
     const { nombre, descripcion, precio, stock, categorias } = req.body;
 
@@ -51,16 +58,19 @@ const createProducto = async (req, res) => {
                 res.json({ modo: mode, id: results.insertId });
             });
         } else {
-            const [rows] = await db.query('INSERT INTO productos(`nombre`, `descripcion`, `precio`, `stock`, `id_categoria`) VALUES (?, ?, ?, ?)', [nombre, descripcion, precio, stock, categorias]);
+            const [rows] = await db.query('INSERT INTO productos(`nombre`, `descripcion`, `precio`, `stock`, `id_categoria`) VALUES (?, ?, ?, ?, ?)', [nombre, descripcion, precio, stock, categorias]);
             res.json({ modo: mode, id: rows.insertId });
         }
     } catch (e) {
         res.status(500).json({ error: e.message });
+    } finally {
+        console.timeEnd('CREATE Conexion ' + mode);
     }
 }
 
 const updateProducto = async (req, res) => {
     const mode = req.headers['x-db-mode'] || 'promise';
+    console.time('UPDATE Conexion ' + mode);
     const db = getDBConnection(mode);
     const { nombre, descripcion, precio, stock, categorias } = req.body;
     const { id } = req.params;
@@ -77,11 +87,14 @@ const updateProducto = async (req, res) => {
         }
     } catch (e) {
         res.status(500).json({ error: e.message });
+    } finally {
+        console.timeEnd('UPDATE Conexion ' + mode);
     }
 }
 
 const deleteProducto = async(req, res) => {
     const mode = req.headers['x-db-mode'] || 'promise';
+    console.time('DELETE Conexion ' + mode);
     const db = getDBConnection(mode);
     const { id } = req.params;
 
@@ -97,6 +110,8 @@ const deleteProducto = async(req, res) => {
         }
     } catch (e) {
         res.status(500).json({ error: e.message });
+    } finally {
+        console.timeEnd('DELETE Conexion ' + mode);
     }
 }
 

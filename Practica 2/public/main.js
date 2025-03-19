@@ -1,9 +1,11 @@
 let modo = document.getElementById('modo').value;
 document.getElementById('modo').addEventListener('change', () => {
     modo = document.getElementById('modo').value;
+    cargarProductos();
+    categorias();
 });
 
-async function cargarProductos() {
+async function cargarProductos(filter = 0) {
     try {
         const response = await fetch('/api/productos', {
             method: 'GET',
@@ -14,9 +16,15 @@ async function cargarProductos() {
         });
     
         const data = await response.json();
-        document.getElementById('productos').innerHTML = data.results.map(producto => `<tr><td>${producto.nombre}</td><td>${producto.categoria}</td><td>${producto.precio}</td><td>${producto.stock}</td><td><a href="productos.html?title=editar&id=${producto.id_producto}" class="btn btn-success">Editar</a><button type="button" class="btn btn-danger" onclick="eliminarProducto(${producto.id_producto});">Eliminar</button></td></tr>`);
+        let productos = data.results;
+        console.log(productos);
+        if (filter !== 0) {
+            productos = productos.filter(producto => producto.id_categoria === filter);
+        }
+        document.getElementById('productos').innerHTML = productos.map(producto => `<tr><td>${producto.nombre}</td><td>${producto.categoria}</td><td>${producto.precio}</td><td>${producto.stock}</td><td><a href="productos.html?title=editar&id=${producto.id_producto}" class="btn btn-success">Editar</a><button type="button" class="btn btn-danger" onclick="eliminarProducto(${producto.id_producto});">Eliminar</button></td></tr>`);
     } catch (err) {
-        document.getElementById('resultados').innerHTML = `<div class="alert alert-danger">Error: ${err.message}</div>`;
+        // document.getElementById('resultados').innerHTML = `<div class="alert alert-danger">Error: ${err.message}</div>`;
+        console.error(err.message);
     }
 }
 
@@ -58,6 +66,11 @@ async function eliminarProducto(id) {
         console.error(err);
     }
 }
+
+document.getElementById('categorias').addEventListener('change', () => {
+    const filter = document.getElementById('categorias').value;
+    cargarProductos(filter);
+});
 
 document.addEventListener('DOMContentLoaded', () => {
     categorias();

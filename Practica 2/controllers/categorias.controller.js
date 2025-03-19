@@ -2,6 +2,7 @@ const getDBConnection = require('../db/index');
 
 const getCategorias = async (req, res) => {
     const mode = req.headers['x-db-mode'] || 'promise';
+    console.time('Conexion ' + mode);
     const db = getDBConnection(mode);
 
     try {
@@ -16,6 +17,8 @@ const getCategorias = async (req, res) => {
         }
     } catch (e) {
         res.status(500).json({ error: e.message });
+    } finally {
+        console.timeEnd('Conexion ' + mode);
     }
 }
 
