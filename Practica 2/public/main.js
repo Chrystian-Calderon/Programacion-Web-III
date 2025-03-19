@@ -3,7 +3,7 @@ document.getElementById('modo').addEventListener('change', () => {
     modo = document.getElementById('modo').value;
 });
 
-async function cargarProductos(modo) {
+async function cargarProductos() {
     try {
         const response = await fetch('/api/productos', {
             method: 'GET',
@@ -14,6 +14,7 @@ async function cargarProductos(modo) {
         });
     
         const data = await response.json();
+        document.getElementById('productos').innerHTML = data.results.map(producto => `<tr><td>${producto.nombre}</td><td>${producto.categoria}</td><td>${producto.precio}</td><td>${producto.stock}</td><td><a href="productos.html?title=editar&id=${producto.id_producto}" class="btn btn-success">Editar</a><button type="button" class="btn btn-danger" onclick="eliminarProducto(${producto.id_producto});">Eliminar</button></td></tr>`);
     } catch (err) {
         document.getElementById('resultados').innerHTML = `<div class="alert alert-danger">Error: ${err.message}</div>`;
     }
@@ -37,6 +38,28 @@ async function categorias() {
     }
 }
 
+async function eliminarProducto(id) {
+    try {
+        const response = await fetch(`/api/productos/${id}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                'x-db-mode': modo
+            }
+        });
+
+        const data = await response.json();
+        if (data.success) {
+            cargarProductos();
+        } else {
+            alert('No se pudo eliminar el producto');
+        }
+    } catch (err) {
+        console.error(err);
+    }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     categorias();
+    cargarProductos();
 });

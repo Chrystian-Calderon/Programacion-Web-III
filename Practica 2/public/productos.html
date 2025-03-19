@@ -43,16 +43,48 @@
             <button type="submit" class="btn btn-primary" id="btn-enviar">Agregar</button>
         </form>
     </div>
+    <script src="main.js"></script>
     <script>
         const urlParams = new URLSearchParams(window.location.search);
         const title = urlParams.get('title');
+        document.getElementById('modo').addEventListener('change', () => {
+            modo = document.getElementById('modo').value;
+            const id = urlParams.get('id');
+            getProducto(id);
+        });
 
         if (title === 'editar') {
             document.querySelector('#title').innerText = 'Editar Producto';
             document.querySelector('#btn-enviar').innerText = 'Actualizar Producto';
+            const id = urlParams.get('id');
+            getProducto(id);
         } else {
             document.querySelector('#title').innerText = 'Agregar Producto';
             document.querySelector('#btn-enviar').innerText = 'Agregar Producto';
+        }
+
+        async function getProducto(id) {
+            try {
+                const response = await fetch(`/api/productos/${id}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'x-db-mode': modo
+                    }
+                });
+
+                const data = await response.json();
+                const producto = data.results[0];
+                if (data.results) {
+                    document.getElementById('nombre').value = producto.nombre;
+                    document.getElementById('descripcion').value = producto.descripcion;
+                    document.getElementById('categorias').value = producto.id_categoria;
+                    document.getElementById('precio').value = producto.precio;
+                    document.getElementById('stock').value = producto.stock;
+                }
+            } catch (err) {
+                console.error(err);
+            }
         }
 
         async function createProducto() {
@@ -81,9 +113,9 @@
             }
         }
 
-        async function updateProducto() {
+        async function updateProducto(id) {
             try {
-                const response = await fetch('/api/productos', {
+                const response = await fetch(`/api/productos/${id}`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
@@ -99,7 +131,8 @@
                 });
 
                 const data = await response.json();
-                if (data.id) {
+                console.log(data);
+                if (data.success) {
                     window.location.href = '/index.html';
                 }
             } catch (err) {
@@ -110,12 +143,12 @@
         document.getElementById('form').addEventListener('submit', async (e) => {
             e.preventDefault();
             if (title === 'editar') {
-                await updateProducto();
+                const id = urlParams.get('id');
+                await updateProducto(id);
             } else {
                 await createProducto();
             }
         })
     </script>
-    <script src="main.js"></script>
 </body>
 </html>

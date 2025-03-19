@@ -23,7 +23,7 @@
                 <div class="col-sm-9 border">
                     <div class="my-2 d-flex gap-2">
                         <a href="productos.html?title=agregar" class="btn btn-primary">Agragar productos</a>
-                        <button type="button" class="btn btn-secondary">Comprar</button>
+                        <!-- <button type="button" class="btn btn-secondary">Comprar</button> -->
                         <select id="categorias" class="form-select form-select-sm w-auto d-inline-block">
                             <option value="" selected disabled>Categorias</option>
                         </select>
@@ -35,15 +35,17 @@
                                 <th scope="col">Categoria</th>
                                 <th scope="col">Precio</th>
                                 <th scope="col">Stock</th>
+                                <th scope="col">Acciones</th> 
                             </tr>
                         </thead>
+                        <tbody id="productos"></tbody>
                     </table>
                 </div>
                 <!-- historial -->
-                <div class="col border ml-2">
+                <!-- <div class="col border ml-2">
                     <h4>Historial</h4>
                     <div id="history"></div>
-                </div>
+                </div> -->
             </div>
         </div>
     </div>
